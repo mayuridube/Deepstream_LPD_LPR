@@ -64,7 +64,7 @@ bool NvDsInferParseCustomNVPlate(std::vector<NvDsInferLayerInfo> const &outputLa
     setlocale(LC_CTYPE, "");
 
     if(!dict_ready) {
-        fdict.open("dict.txt");
+        fdict.open("../nvinfer_custom_lpr_parser/dict.txt");
         if(!fdict.is_open())
         {
             cout << "open dictionary file failed." << endl;
