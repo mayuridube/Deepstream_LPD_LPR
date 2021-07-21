@@ -1,1 +1,7 @@
 # Example to run only classifier LPR model on images
+
+<h3> Steps to Run: </h3>
+$ cd LPR_On_Images<br>
+$ python3 only_lpr_classifier.py <file_name.jpg><br>
+e.g:<br>
+$ python3 only_lpr_classifier.py ./index.jpeg<br>
