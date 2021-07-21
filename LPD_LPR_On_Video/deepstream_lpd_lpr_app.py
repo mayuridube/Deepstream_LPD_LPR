@@ -101,6 +101,7 @@ def tiler_src_pad_buffer_probe(pad,info,u_data):
             try:
                 # Casting l_obj.data to pyds.NvDsObjectMeta
                 obj_meta=pyds.NvDsObjectMeta.cast(l_obj.data)
+                
             except StopIteration:
                 break           
             
@@ -113,7 +114,7 @@ def tiler_src_pad_buffer_probe(pad,info,u_data):
                 # print(classifier_list_meta.num_labels)
 
                 label_list = classifier_list_meta.label_info_list
-                print("*************")
+                print("******Result:*******")
                 while label_list is not None:
                     try:
                         label_list_meta=pyds.NvDsLabelInfo.cast(label_list.data) 
@@ -128,7 +129,7 @@ def tiler_src_pad_buffer_probe(pad,info,u_data):
                         label_list=label_list.next
                     except StopIteration:
                         break
-                print("*************") 
+                # print("*************") 
                 try: 
                     c_list=c_list.next
                 except StopIteration:
@@ -388,7 +389,7 @@ def main(args):
             tracker.set_property('enable_batch_process',
                                  tracker_enable_batch_process)
 
-    sgie.set_property('config-file-path', "lpr_config_sgie_us.txt")
+    sgie.set_property('config-file-path', "lpr_us_config.txt")
     sgie.set_property('process-mode', 2)
 
     tiler_rows=int(math.sqrt(number_sources))

@@ -1,8 +1,4 @@
 #!/usr/bin/env python3
-
-# USAGE : python3 <script_name> <jpg filepath>
-# ex. python3 number_plate_image_final.py ./02.JPG
-
 # Pipeline input_image -> LPR -> Output
 
 ################################################################################
@@ -64,10 +60,6 @@ TILED_OUTPUT_HEIGHT = 1080
 GST_CAPS_FEATURES_NVMM = "memory:NVMM"
 OSD_PROCESS_MODE = 0
 OSD_DISPLAY_TEXT = 0
-pgie_classes_str = ["Vehicle", "TwoWheeler", "Person", "RoadSign"]
-
-
-detections = {}
 
 # tiler_sink_pad_buffer_probe  will extract metadata received on OSD sink pad
 # and update params for drawing rectangle, object information etc.
@@ -125,10 +117,10 @@ def tiler_sink_pad_buffer_probe(pad, info, u_data):
                         label_list_meta=pyds.NvDsLabelInfo.cast(label_list.data) 
                     except StopIteration:
                         break
-                    # print(label_list_meta.label_id)         
-                    # print('------',label_list_meta.result_label)         
-                    detections.update({frame_meta.source_id: {}})
-                    detections[frame_meta.source_id] = label_list_meta.result_label
+                    # print(label_list_meta.label_id)  
+                    print("------Result:------")       
+                    print(label_list_meta.result_label)         
+                    
                     try: 
                         label_list=label_list.next
                     except StopIteration:
@@ -146,43 +138,13 @@ def tiler_sink_pad_buffer_probe(pad, info, u_data):
 
             # detections.append(copy.deepcopy(dictionary))
             # print(detections)
-        else:
-            if not frame_meta.source_id in detections:
-                detections.update({frame_meta.source_id: {}})
-                detections[frame_meta.source_id] = 'None'
+        
         try:
             l_frame = l_frame.next
         except StopIteration:
             break
 
-        # writing in result.txt after all the detection
-        # print("detection:",detections)
-        if len(detections)>1:
-            # print("+++++++++++++++",detections)
-            
-            f = open(os.getcwd() + "/result.txt", "w+")
-            f.write(detections[0]+"\n")
-            f.write(detections[1]+"\n")
-            f.close()
-            break
-
-
     return Gst.PadProbeReturn.OK
-
-def draw_bounding_boxes(image, obj_meta, confidence):
-    confidence = '{0:.2f}'.format(confidence)
-    rect_params = obj_meta.rect_params
-    top = int(rect_params.top)
-    left = int(rect_params.left)
-    width = int(rect_params.width)
-    height = int(rect_params.height)
-    obj_name = pgie_classes_str[obj_meta.class_id]
-    image = cv2.rectangle(image, (left, top),
-                          (left+width, top+height), (0, 0, 255, 0), 2)
-    # Note that on some systems cv2.putText erroneously draws horizontal lines across the image
-    image = cv2.putText(image, obj_name+',C='+str(confidence),
-                        (left-10, top-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255, 0), 2)
-    return image
 
 
 
